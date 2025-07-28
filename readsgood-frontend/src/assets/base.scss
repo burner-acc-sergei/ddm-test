@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Lovers+Quarrel&display=swap');
+
+/* Variables */
+:root {
+  --color-bg: #ffffff;
+  --color-bg-card: var(--color-bg); // Cards use same background as main in light mode
+  --color-text: #000000;
+  --color-text-secondary: #555555;
+  --color-accent-primary: #364454;
+  --color-accent-secondary: #162333;
+  --border-radius: 8px;
+  --border-radius-small: 4px;
+  --border-radius-large: 16px;
+  --input-focus-shadow: 0 0 0 2px rgba(77, 113, 255, 0.2);
+}
+
+/* Dark theme variables: apply by adding 'dark' class to html */
+
+/* Global Reset */
+html {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  // Fix mobile viewport issues
+  -webkit-text-size-adjust: 100%;
+  height: 100%;
+
+  // Prevent viewport jumping on mobile Chrome
+  @media screen and (max-width: 768px) {
+    // Use fixed viewport height on mobile to prevent jumping
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+  }
+
+  &.dark {
+    --color-bg: #1f1f1f; // Slightly softened charcoal
+    --color-bg-card: #2a2a2a; // Lighter background for cards in dark mode
+    --color-text: #f8f8f8; // Almost white text
+    --color-text-secondary: #bbbbbb; // Softer secondary text
+    --color-accent-primary: #fff9c4; // Pale buttery accent
+    --color-accent-secondary: #fffde7; // Subtle ivory highlight
+    --input-focus-shadow: 0 0 0 2px rgba(255, 241, 118, 0.3); // Soft yellow glow
+  }
+}
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+/* Base Styles */
+body {
+  min-height: 100vh;
+  height: 100%;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font:
+    18px/1.5 Inter,
+    system-ui,
+    sans-serif;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  // Prevent horizontal scrolling on mobile
+  overflow-x: hidden;
+
+  .logo {
+    font-size: 96px;
+    font-family: 'Lovers Quarrel', cursive;
+    font-weight: 400;
+    margin: 0.67em 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 1em 0 0.5em;
+    line-height: 1.2;
+  }
+
+  p + p {
+    margin-top: 1em;
+  }
+
+  /* Links */
+  a {
+    color: var(--color-accent-primary);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  a,
+  button {
+    &:focus {
+      outline: none;
+    }
+  }
+
+  /* Buttons */
+  button {
+    background: var(--color-accent-primary);
+    color: var(--color-bg);
+    border: none;
+    padding: 0.5em 1em;
+    cursor: pointer;
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #8888;
+    }
+  }
+
+  /* Utility */
+  :focus {
+    outline: 2px solid var(--color-accent-primary);
+    outline-offset: 2px;
+  }
+
+  /* Media elements */
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+}

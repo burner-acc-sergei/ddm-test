@@ -12,7 +12,7 @@ export interface UpdateGoodreadsTokenDto {
 }
 
 export interface User {
-  id: string;
+  id: number;
   username: string;
   createdAt: Date;
   updatedAt: Date;
@@ -22,13 +22,13 @@ export interface User {
 }
 
 export interface UserResponse {
-  id: string;
+  id: number;
   username: string;
   createdAt: Date;
 }
 
 export interface UserWithGoodreadsTokens {
-  id: string;
+  id: number;
   username: string;
   createdAt: Date;
   goodreadsToken: string | null;
@@ -43,7 +43,7 @@ export interface GoodreadsTokenInfo {
 }
 
 export interface UserMeResponse {
-  id: string;
+  id: number;
   username: string;
   authenticated: boolean;
   goodreadsConnected: boolean;

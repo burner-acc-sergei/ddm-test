@@ -84,3 +84,15 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+# Local deployment script and configuration
+deploy-local.sh
+deploy-config.env
+
+# SQLite database files
+*.db
+*.db-journal
+
+# Sensitive environment files
+*.local.env
+.deploy-secrets

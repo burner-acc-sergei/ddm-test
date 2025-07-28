@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Error - ReadsGood</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #ff7979 0%, #e74c3c 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 500px;
+            margin: 20px;
+        }
+        .error-icon {
+            font-size: 4rem;
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+        h1 {
+            color: #e74c3c;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            color: #666;
+        }
+        .error-message {
+            background: #ffe6e6;
+            border: 1px solid #ffcccc;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: #c7254e;
+            font-family: monospace;
+            word-break: break-word;
+        }
+        .btn {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+        .btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+        .btn-retry {
+            background: #e74c3c;
+        }
+        .btn-retry:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="error-icon">❌</div>
+        <h1>Authentication Error</h1>
+        <p>There was a problem connecting your Goodreads account. Please try again.</p>
+        
+        <div class="error-message" id="error-details">
+            <!-- Error message will be populated by JavaScript -->
+        </div>
+        
+        <a href="/goodreads/auth/init" class="btn btn-retry">Try Again</a>
+        <a href="/" class="btn">Go Home</a>
+    </div>
+
+    <script>
+        // Extract error message from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorMessage = urlParams.get('message');
+        const errorDetails = document.getElementById('error-details');
+        
+        if (errorMessage) {
+            errorDetails.textContent = decodeURIComponent(errorMessage);
+        } else {
+            errorDetails.textContent = 'Unknown error occurred during authentication.';
+        }
+    </script>
+</body>
+</html>

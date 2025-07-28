@@ -56,7 +56,7 @@ export class UsersService {
   }
 
   async updateGoodreadsToken(
-    userId: string,
+    userId: number,
     tokenData: UpdateGoodreadsTokenDto,
   ): Promise<UserWithGoodreadsTokens> {
     return this.prisma.user.update({
@@ -77,7 +77,7 @@ export class UsersService {
     });
   }
 
-  async getGoodreadsToken(userId: string): Promise<GoodreadsTokenInfo | null> {
+  async getGoodreadsToken(userId: number): Promise<GoodreadsTokenInfo | null> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       select: {

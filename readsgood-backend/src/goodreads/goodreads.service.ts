@@ -39,7 +39,7 @@ export class GoodreadsService {
   private oauth: OAuth | null = null;
 
   // Store OAuth tokens per user session (temporary during OAuth flow)
-  private userTokens = new Map<string, UserOAuthTokens>();
+  private userTokens = new Map<number, UserOAuthTokens>();
 
   constructor(private usersService: UsersService) {
     this.xmlParser = new xml2js.Parser({
@@ -52,13 +52,15 @@ export class GoodreadsService {
     });
 
     if (this.apiKey && this.apiSecret) {
+      const backendUrl =
+        process.env.BACKEND_URL || 'https://rg.lushchik.com/api';
       this.oauth = new OAuth(
         'https://www.goodreads.com/oauth/request_token',
         'https://www.goodreads.com/oauth/access_token',
         this.apiKey,
         this.apiSecret,
         '1.0',
-        'http://localhost:3000/goodreads/auth/callback', // Fixed callback URL
+        `${backendUrl}/goodreads/auth/callback`,
         'HMAC-SHA1',
       );
     }
@@ -76,7 +78,7 @@ export class GoodreadsService {
     });
   }
 
-  private async oauthGet(url: string, userId: string): Promise<string> {
+  private async oauthGet(url: string, userId: number): Promise<string> {
     // First try to get stored tokens from database
     const storedTokens = await this.usersService.getGoodreadsToken(userId);
 
@@ -131,7 +133,7 @@ export class GoodreadsService {
     });
   }
 
-  async initOAuth(userId: string): Promise<{ authorizeUrl: string }> {
+  async initOAuth(userId: number): Promise<{ authorizeUrl: string }> {
     if (!this.oauth) {
       throw new HttpException(
         'OAuth configuration missing',
@@ -140,7 +142,8 @@ export class GoodreadsService {
     }
 
     // Create callback URL with user ID in path
-    const callbackUrl = `http://localhost:3000/goodreads/oauth/return/${userId}`;
+    const backendUrl = process.env.BACKEND_URL || 'https://rg.lushchik.com/api';
+    const callbackUrl = `${backendUrl}/goodreads/oauth/return/${userId}`;
 
     return new Promise((resolve, reject) => {
       // Pass callback URL as the first parameter to getOAuthRequestToken
@@ -177,7 +180,7 @@ export class GoodreadsService {
   }
 
   async handleOAuthCallback(
-    userId: string,
+    userId: number,
     oauthToken: string,
     oauthVerifier: string,
   ): Promise<void> {
@@ -258,7 +261,7 @@ export class GoodreadsService {
   }
 
   async searchBooks(
-    userId: string,
+    userId: number,
     query: string,
     page: number = 1,
   ): Promise<SearchBooksResponse> {
@@ -303,7 +306,7 @@ export class GoodreadsService {
     }
   }
 
-  async getBookById(userId: string, bookId: string): Promise<BookDetails> {
+  async getBookById(userId: number, bookId: string): Promise<BookDetails> {
     // Check if user has stored tokens in database
     const storedTokens = await this.usersService.getGoodreadsToken(userId);
     const hasStoredTokens =

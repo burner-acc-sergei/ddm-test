@@ -44,7 +44,7 @@ export class GoodreadsController {
     }
 
     // Use authenticated user ID from BasicAuthGuard
-    const userId = req.user?.id ? String(req.user.id) : 'anonymous-user';
+    const userId = req.user?.id ? req.user.id : 1; // Default to user ID 1
     return this.goodreadsService.searchBooks(userId, query, pageNumber);
   }
 
@@ -61,7 +61,7 @@ export class GoodreadsController {
     }
 
     // Use authenticated user ID from BasicAuthGuard
-    const userId = req.user?.id ? String(req.user.id) : 'anonymous-user';
+    const userId = req.user?.id ? req.user.id : 1; // Default to user ID 1
     return this.goodreadsService.getBookById(userId, bookId);
   }
 
@@ -70,23 +70,24 @@ export class GoodreadsController {
     @Request() req: AuthenticatedRequest,
   ): Promise<{ authorizeUrl: string }> {
     // Use authenticated user ID from BasicAuthGuard
-    const userId = req.user?.id ? String(req.user.id) : 'anonymous-user';
+    const userId = req.user?.id ? req.user.id : 1; // Default to user ID 1
     return this.goodreadsService.initOAuth(userId);
   }
 
   @Public()
   @Get('oauth/return/:userId')
   async handleOAuthReturn(
-    @Param('userId') userId: string,
+    @Param('userId') userIdParam: string,
     @Query('oauth_token') oauthToken: string,
     @Query('authorize') authorize: string,
     @Res() res: Response,
   ): Promise<void | { success: boolean; message: string }> {
     try {
-      if (!userId) {
+      const userId = parseInt(userIdParam, 10);
+      if (isNaN(userId)) {
         return {
           success: false,
-          message: 'User ID is required in the callback',
+          message: 'Invalid user ID provided',
         };
       }
 
@@ -97,14 +98,15 @@ export class GoodreadsController {
       );
 
       // Redirect to success page
-      res.redirect(`${this.frontendAppUrl}/all-set.html`);
+      res.redirect(`${this.frontendAppUrl}/auth/success`);
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : 'Unknown error';
       // Redirect to error page with message
-      res.redirect(
-        `${this.frontendAppUrl}/error.html?message=${encodeURIComponent(errorMessage)}`,
-      );
+      res.status(400).json({
+        success: false,
+        message: errorMessage,
+      });
     }
   }
 }

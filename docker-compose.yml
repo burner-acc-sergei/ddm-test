@@ -1,32 +1,40 @@
-version: '3.8'
-
 services:
   db:
-    image: postgres:15-alpine
+    image: postgres:15
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: examplepassword
-      POSTGRES_DB: mydb
+      POSTGRES_DB: readsgood
     volumes:
       - pgdata:/var/lib/postgresql/data
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d readsgood"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
-      context: ./backend
+      context: ./readsgood-backend
     ports:
       - "3000:3000"
+    env_file:
+      - ./readsgood-backend/.env
     environment:
-      DATABASE_URL: postgres://postgres:examplepassword@db:5432/mydb
+      DATABASE_URL: postgres://postgres:examplepassword@db:5432/readsgood
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     restart: always
 
   frontend:
     build:
-      context: ./frontend
+      context: ./readsgood-frontend
     ports:
       - "8080:8080"
+    env_file:
+      - ./readsgood-frontend/.env
     depends_on:
       - backend
     restart: always

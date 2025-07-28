@@ -23,7 +23,7 @@ const router = createRouter({
       path: '/search',
       name: 'search',
       component: () => import('../views/SearchResults.vue'),
-      meta: { requiresGoodreads: true }
+      meta: { requiresGoodreads: true },
     },
     {
       path: '/book/:id',
@@ -37,9 +37,14 @@ const router = createRouter({
       component: () => import('../views/NotFoundPage.vue'),
     },
     {
+      path: '/auth/success',
+      name: 'auth-success',
+      component: () => import('../views/AuthSuccessView.vue'),
+    },
+    {
       path: '/:pathMatch(.*)*',
-      redirect: '/404'
-    }
+      redirect: '/404',
+    },
   ],
 })
 
